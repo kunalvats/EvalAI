@@ -23,8 +23,13 @@ before_script:
 - wget https://s3-eu-west-1.amazonaws.com/softwaremill-public/elasticmq-server-0.14.2.jar
 - java -jar elasticmq-server-0.14.2.jar &
 before_install:
-- openssl aes-256-cbc -K $encrypted_932c648f8890_key -iv $encrypted_932c648f8890_iv -in secrets.tar.enc -out secrets.tar -d
+- openssl aes-256-cbc -K $encrypted_932c648f8890_key -iv $encrypted_932c648f8890_iv
+  -in test_secret.tar.enc -out test_secret.tar -d
+- openssl aes-256-cbc -K $encrypted_932c648f8890_key -iv $encrypted_932c648f8890_iv
+  -in secrets.tar.enc -out secrets.tar -d
 - tar xvf secrets.tar
+- tar xvf test_secret.tar
+- cat test_secret.env
 - sudo rm -f /etc/boto.cfg
 install:
 - pip install -r requirements/dev.txt
@@ -35,9 +40,14 @@ script:
 after_success:
 - coveralls --rcfile=.coveragerc
 - pip install awscli
+- cat test_secret.env
 - bash scripts/deploy/deploy.sh
 notifications:
   email:
     on_success: change
     on_failure: always
     slack: cloudcv:gy3CGQGNXLwXOqVyzXGZfdea
+env:
+  global:
+  - secure: h+BmLJdjQ9XrT/LFCRk/vVMwjN+ZM+YjsyULjZFhZqBgFzCYncUafaFkkBpgPSCYUzTguIKKUXh/5JZeClBy/RRleHZxC4M7eQ8p1YIK8zlKxHIMFQkFnlAbPNMgYmtm/Z4XvdyGmP3ID64mygi0qKZs441MRE8uS6TunCVN7uTXThZklfNONwch6Nj/LzWFvs9NSJA6S0lzPiGt/W+7f0li9pyC+BZA6IOGZ4ZTb9hfOYCLzx2zNaQK89GWvNTEbQpdORIFk0AAP8TsttoR8ZFRhsYANPU6hbyx/AwRfW/5ByPOFv5mkNcbbqXu2JLGOsSiS1dQ1oO47XB2MAPp/7eDgweJVAf39WTH1iWRVPSkt4zvVRVSFMP65I5H5YAmYYrCPDAcqbsxQR8P6HhnuJ9Tr96LgNbZBLr+cNHqYNsOrUep4iJR/7gacOVZMp7VhCW3VSS3WUPYu3Bll9xd74lMFrXqUYZMOHuEaDda+pUu4R168H5EvWlBkwPQ/C3UQebxbc7xIY2Ju9syjSnrIrlz0ZvhWdHBl7UIahagUPOBNXsMii2KIL0aatcLBn7WKLLmuwQj9iMdj1PwS2zC2rqWEL15AT06UCrtRN4WwuFXUEbpY2ltFpn13ncUASGDkLU/FF8em8TrFzXlfjp4rh6mp/rKQBkrm+qMNPyUIDs=
+  - secure: ym/M041x69iy68w55O/3lylQig/ZmrwOBI47FjP6D/94ot+Ok1YWZ0GRX8tvOGwooA12xYT8uE+pTzJzly8dYD3K2nC/v8yZ90Z86T2YAGUJGwzVouziNfw3TU5WeLqOqUxwNqikEc/Xv2cHQQNOabAmFpqR8eptDcK+tHgeXBzntY8USQF/p1C1RxeyJTpv64nJ8izyNT57zfH5FmzAyAJNfR/26xBykAZNwpkt/tutoxEa68UBZLhLelMuhJac6pfB+cyiC6sfYSJknucdTTdG7dU7sA0p4CMQj19TXRLS4tB6991Q4ndsIy5Hxm2vfOp7ZnzP+QYu7cifOwajjuR4i/yYf13Sv+MskzoFEu3aYYv/iV/bI1bhGZNZYmS0nY3wBMzv2e+wTzl3cl9zAeZ1nRd8DiO1XdWC1FK3+ocyIAsXCxx1mvXBnHJT1xgpiI+DPLdGPPvPHkWyNRyUJZolZU5duPr5C68fvjc25wdEXEPkmIfirGx+JPoXOMOab7pmBKXA3TLztORF1ljoTomKFAksfMsUdAfUq1b32BDAGm0H9NJNS50TZdO698vZg7WZ+WbH1AIYU/VJDBTBufZPyDNz9UN6FznHRbGUhTsZ+1uXiS049wsIC8EXGYAm4+IzkhwdZXHTMhpRrYTr3z0fnoxr4ZniUFN6DCchRDM=
