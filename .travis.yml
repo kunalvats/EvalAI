@@ -25,7 +25,6 @@ before_script:
 before_install:
 - openssl aes-256-cbc -K $encrypted_932c648f8890_key -iv $encrypted_932c648f8890_iv
   -in test_secret.tar.enc -out test_secret.tar -d
-- tar xvf secrets.tar
 - tar xvf test_secret.tar
 - cat test_secret.env
 - sudo rm -f /etc/boto.cfg
